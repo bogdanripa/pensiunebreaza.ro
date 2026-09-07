@@ -52,6 +52,17 @@
     byName[it.file] = i;
   });
 
+  var subsets = {
+    firepit: {
+      label: 'Seri în jurul focului',
+      files: ['piscina-06.jpg', 'piscina-09.jpg', 'piscina-11.jpg', 'piscina-18.jpg', 'piscina-21.jpg']
+    },
+    sport: {
+      label: 'Sport în aer liber',
+      files: ['piscina-08.jpg', 'piscina-14.jpg', 'piscina-15.jpg', 'piscina-16.jpg', 'piscina-19.jpg', 'piscina-20.jpg']
+    }
+  };
+
   function bounds(i) {
     var g = items[i].g, s = i, e = i;
     while (s > 0 && items[s - 1].g === g) s--;
@@ -75,23 +86,43 @@
   var img = lb.querySelector('.lb-stage img');
   var capn = lb.querySelector('.lb-capname');
   var num = lb.querySelector('.lb-num');
-  var cur = 0, gs = 0, ge = 0;
+  var cur = 0, gs = 0, ge = 0, activeIndices = null, activeLabel = '';
 
   function render() {
     var it = items[cur];
     img.src = 'assets/images/' + it.file;
     img.alt = it.alt;
-    capn.textContent = it.g;
-    num.textContent = (cur - gs + 1) + ' / ' + (ge - gs + 1);
+    capn.textContent = activeLabel || it.g;
+    if (activeIndices) {
+      num.textContent = (activeIndices.indexOf(cur) + 1) + ' / ' + activeIndices.length;
+    } else {
+      num.textContent = (cur - gs + 1) + ' / ' + (ge - gs + 1);
+    }
   }
   function step(d) {
+    if (activeIndices) {
+      var pos = activeIndices.indexOf(cur) + d;
+      if (pos >= activeIndices.length) pos = 0;
+      else if (pos < 0) pos = activeIndices.length - 1;
+      cur = activeIndices[pos];
+      render();
+      return;
+    }
     cur += d;
     if (cur > ge) cur = gs;
     else if (cur < gs) cur = ge;
     render();
   }
-  function open(i) {
+  function open(i, subsetName) {
     cur = i;
+    activeIndices = null;
+    activeLabel = '';
+    var subset = subsets[subsetName];
+    if (subset) {
+      activeIndices = subset.files.map(function (file) { return byName[file]; }).filter(function (idx) { return idx != null; });
+      activeLabel = subset.label;
+      if (activeIndices.indexOf(cur) < 0) cur = activeIndices[0];
+    }
     var b = bounds(i); gs = b[0]; ge = b[1];
     render();
     lb.classList.add('open');
@@ -129,7 +160,7 @@
       var idx = byName[nameFor(el)];
       if (idx == null) return; // fall back to default (navigate) if unknown
       e.preventDefault();
-      open(idx);
+      open(idx, el.getAttribute('data-gallery-subset'));
     });
   });
 
