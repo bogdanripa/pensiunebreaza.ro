@@ -13,7 +13,7 @@
   };
   items = items.filter(function (it) { return !omittedLiving[it.file]; });
   items.forEach(function (it) {
-    if (it.g === 'Foișor & grătar' || it.g === 'Living & semineu') {
+    if (it.g === 'Foișor & grătar' || it.g === 'Living & șemineu') {
       it.g = 'Living & pavilion';
     }
   });
@@ -28,7 +28,7 @@
   });
   var livingGroup = groups.find(function (group) {
     var heading = group.querySelector('h2');
-    return heading && heading.textContent.trim() === 'Living & semineu';
+    return heading && heading.textContent.trim() === 'Living & șemineu';
   });
   if (pavilionGroup && livingGroup) {
     Object.keys(omittedLiving).forEach(function (file) {
