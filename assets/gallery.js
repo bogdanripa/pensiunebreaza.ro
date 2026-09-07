@@ -60,6 +60,10 @@
     sport: {
       label: 'Sport în aer liber',
       files: ['piscina-08.jpg', 'piscina-14.jpg', 'piscina-15.jpg', 'piscina-16.jpg', 'piscina-19.jpg', 'piscina-20.jpg']
+    },
+    poker: {
+      label: 'Cramă cu masă de poker',
+      files: ['biliard-03.jpg', 'biliard-08.jpg']
     }
   };
 
