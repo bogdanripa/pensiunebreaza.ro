@@ -48,7 +48,7 @@
       else if (r.k === 'bad') { cls = 'bad'; txt = 'Check-out trebuie să fie după check-in.'; }
       else if (r.k === 'min') { cls = 'bad'; txt = 'Sejur minim 2 nopți.'; }
       else if (r.k === 'ideal') { cls = 'ideal'; txt = '✓ Perioadă ideală de sejur (' + nightsTxt(r.n) + ').'; }
-      else if (r.k === 'ok') { cls = 'ok'; txt = '✓ Disponibil — sejur mid-week (' + nightsTxt(r.n) + ').'; }
+      else if (r.k === 'ok') { cls = 'ok'; txt = '✓ Perioadă selectată — sejur mid-week (' + nightsTxt(r.n) + ').'; }
       else { cls = 'other'; txt = 'Combinație non-standard (' + nightsTxt(r.n) + '). Recomandăm weekend Vineri–Duminică, Luni–Vineri sau 7+ nopți.'; }
       if (status) { status.className = 'book-status' + (cls ? ' ' + cls : ''); status.textContent = txt; }
     }
