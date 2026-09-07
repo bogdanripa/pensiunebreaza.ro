@@ -4,7 +4,47 @@
    navigation if this script doesn't run. */
 (function () {
   var items = window.RODICA_GALLERY || [];
+  var omittedLiving = {
+    'living-02.jpg': true,
+    'living-03.jpg': true,
+    'living-05.jpg': true,
+    'living-06.jpg': true,
+    'living-07.jpg': true
+  };
+  items = items.filter(function (it) { return !omittedLiving[it.file]; });
+  items.forEach(function (it) {
+    if (it.g === 'Foișor & grătar' || it.g === 'Living & semineu') {
+      it.g = 'Living & pavilion';
+    }
+  });
   if (!items.length) return;
+
+  // On the full gallery page, merge the pavilion and selected living photos
+  // into one visible group and remove near-duplicate living angles.
+  var groups = Array.prototype.slice.call(document.querySelectorAll('.gal-group'));
+  var pavilionGroup = groups.find(function (group) {
+    var heading = group.querySelector('h2');
+    return heading && heading.textContent.trim() === 'Foișor & grătar';
+  });
+  var livingGroup = groups.find(function (group) {
+    var heading = group.querySelector('h2');
+    return heading && heading.textContent.trim() === 'Living & semineu';
+  });
+  if (pavilionGroup && livingGroup) {
+    Object.keys(omittedLiving).forEach(function (file) {
+      var id = file.replace(/\.jpg$/, '');
+      var thumb = livingGroup.querySelector('#' + id);
+      if (thumb) thumb.remove();
+    });
+    var pavilionGrid = pavilionGroup.querySelector('.gal-grid');
+    var livingGrid = livingGroup.querySelector('.gal-grid');
+    Array.prototype.slice.call(livingGrid.children).forEach(function (thumb) {
+      pavilionGrid.appendChild(thumb);
+    });
+    pavilionGroup.querySelector('h2').textContent = 'Living & pavilion';
+    pavilionGroup.querySelector('.count').textContent = pavilionGrid.children.length + ' foto';
+    livingGroup.remove();
+  }
 
   var byName = {};
   items.forEach(function (it, i) {
